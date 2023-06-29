@@ -1,0 +1,2 @@
+Working Makfile : 0
+Overall structure thinking + class learning and SDL2 implementation : X
