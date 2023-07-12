@@ -1,60 +1,42 @@
-CC := clang-11
+CC = clang
+CFLAGS = -Wall
+LDFLAGS = -lSDL2 -lSDL2_ttf
+SRC_DIR = src
+OBJ_DIR = obj
+BIN_DIR = bin
+RES_DIR = res
 
-TARGET := program
+# Find all .c files recursively in the source directory and its subdirectories
+SRCS := $(shell find $(SRC_DIR) -name '*.c')
 
-SRCDIR      := src
-INCDIR      := inc
-BUILDDIR    := obj
-TARGETDIR   := bin
-RESDIR      := res
-SRCEXT      := c
-DEPEXT      := d
-OBJEXT      := o
+# Generate object file names from source file names
+OBJS := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
-CFLAGS := `sdl2-config --libs --cflags` -ggdb3 -O0 --std=c99 -Wall -lSDL2_image -lm
+# Set the name of the final executable
+TARGET = $(BIN_DIR)/explore
 
-SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
-OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+# Default target
+all: $(TARGET)
 
-#	Default Make
-all: resources $(TARGET)
+# Compile .c files into .o files
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-# Remake
-remake: cleaner all
+# Link object files to create the final executable
+$(TARGET): $(OBJS)
+	@mkdir -p $(@D)
+	$(CC) $(OBJS) $(LDFLAGS) -o $(TARGET)
+	cp -r $(RES_DIR) $(BIN_DIR)/
 
-#Copy Resources from Resources Directory to Target Directory
-resources: directories
-	@cp $(RESDIR)/* $(TARGETDIR)/
-
-#Make the Directories
-directories:
-	@mkdir -p $(TARGETDIR)
-	@mkdir -p $(BUILDDIR)
-	@mkdir -p $(RESDIR)
-
-# Remake
-remake: cleaner all
-
-#Clean only Objects
+# Clean build artifacts
 clean:
-	@$(RM) -rf $(BUILDDIR)
+	rm -rf $(OBJ_DIR) $(BIN_DIR)
 
-#Pull in dependency info for *existing* .o files
--include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))
+run :
+	./bin/explore
 
-#Link
-$(TARGET): $(OBJECTS)
-	$(CC) -o $(TARGETDIR)/$(TARGET) $^ $(LIB)
+br : all run
 
-#Compile
-$(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
-	@$(CC) $(CFLAGS) $(INCDEP) -MM $(SRCDIR)/$*.$(SRCEXT) > $(BUILDDIR)/$*.$(DEPEXT)
-	@cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
-	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
-	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
-	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
-
-#Non-File Targets
-.PHONY: all remake clean cleaner resources
+# Phony targets (not associated with files)
+.PHONY: all clean
