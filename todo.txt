@@ -3,3 +3,4 @@ Overall structure thinking + class learning and SDL2 implementation : V
 
 -- Jul 13 --
 Finish menu struct implementation with buttons / labels. : X
+Change structure -> create folder menu/ into game_scenes/ and move game_scenes/elements into menu/elements : X
