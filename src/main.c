@@ -1,12 +1,11 @@
 #include "headers/structs.h"
 #include "lib/include.h"
+#include "headers/game_scenes/menu/menu.h"
 
-int running = 0;
-int mouseX, mouseY;
-int mouseClicked = FALSE;
+int scene = MENU_SCENE;
 SDL_Window *window = NULL;
 SDL_Renderer *rend = NULL;
-Game_Scene *current_Game_Scene = NULL;
+Menu *main_menu = NULL;
 
 int initalize_window(void) 
 {
@@ -19,8 +18,8 @@ int initalize_window(void)
   window = SDL_CreateWindow("exploration",
                             SDL_WINDOWPOS_CENTERED,
                             SDL_WINDOWPOS_CENTERED,
-                            WINDOW_HEIGHT,
                             WINDOW_WIDTH,
+                            WINDOW_HEIGHT,
                             0);
   if (!window) 
   {
@@ -51,7 +50,7 @@ int initalize_window(void)
 
 void setup()
 {
-
+  main_menu = create_Menu(rend);
 }
 
 
@@ -59,40 +58,18 @@ void setup()
 
 void process_input()
 {
-  SDL_Event event;
-  SDL_PollEvent(&event);
 
-  switch (event.type) 
-  {
-    case SDL_QUIT:
-      running = FALSE;
-      break;
-    case SDL_KEYDOWN:
-      if (event.key.keysym.sym == SDLK_ESCAPE)
-        running = FALSE;
-      break;
-    case SDL_MOUSEBUTTONDOWN: 
-      SDL_GetMouseState(&mouseX, &mouseY);
-      mouseClicked = TRUE;
-  }
 }
 
 void update()
 {
-  if (mouseClicked)
-  {
-    
-    mouseClicked = FALSE;
-  }
+
 }
 
 void render()
 {
-  SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
-  SDL_RenderClear(rend);
-  // Render stuff here
-
-  SDL_RenderPresent(rend);
+    // Render stuff here
+  
 }
 
 void destroy_window() 
@@ -112,9 +89,18 @@ int main(void)
 
   while (running)
   {
-    process_input();
-    update();
-    render();
+    //process_input();
+    //update();
+    //render();
+
+    switch(scene)
+    {
+      case MENU_SCENE:
+        Menu_run(main_menu, rend);
+        break;
+      default:
+        break;
+    }
   }
 
   destroy_window();

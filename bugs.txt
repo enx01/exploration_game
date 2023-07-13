@@ -1,0 +1,3 @@
+-- Jul 13 --
+issue : Game_Scenes polymorphism not working, can't dynamically switch between scenes.
+fix : adding int scene with flags : MENU_SCENE (20), GAME_SCENE(21) and switch(scene) in while loop.

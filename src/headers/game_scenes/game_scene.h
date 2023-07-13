@@ -8,6 +8,7 @@ struct Game_Scene
   void(*render)();
 };
 
+Game_Scene *create_Game_Scene();
 void GS_process_input(Game_Scene *base);
 void GS_update(Game_Scene *base);
 void GS_render(Game_Scene *base);
