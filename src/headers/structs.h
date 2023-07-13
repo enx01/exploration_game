@@ -6,39 +6,22 @@
 // Button
 struct Button;
 
-struct Button
-{
-  SDL_Rect rect;
-  SDL_Rect label_rect;
-  SDL_Texture *texture;
-  void (*action)();
-  int isClicked;
-};
-
 typedef struct Button Button;
 
 // Label
 struct Label;
 
-struct Label
-{
-
-};
-
 typedef struct Label Label;
 
 // Game_scenes
 
+// Game_Scene
+struct Game_Scene;
+
+typedef struct Game_Scene Game_Scene;
+
 // Menu
 struct Menu;
-
-struct Menu
-{
-  Label *labels;
-  int labels_count;
-  Button *buttons;
-  int buttons_count;
-};
 
 typedef struct Menu Menu;
 

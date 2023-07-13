@@ -1,17 +1,12 @@
-#include "headers/game_scenes/elements/button.h"
-#include <SDL2/SDL_render.h>
+#include "headers/structs.h"
+#include "lib/include.h"
 
 int running = 0;
 int mouseX, mouseY;
 int mouseClicked = FALSE;
 SDL_Window *window = NULL;
 SDL_Renderer *rend = NULL;
-Button *test_Button = NULL;
-
-void lol()
-{
-  printf("splash\n");
-}
+Game_Scene *current_Game_Scene = NULL;
 
 int initalize_window(void) 
 {
@@ -56,7 +51,7 @@ int initalize_window(void)
 
 void setup()
 {
-  test_Button = create_Button(10, 10, 300, 200, "test",lol, rend);
+
 }
 
 
@@ -86,7 +81,7 @@ void update()
 {
   if (mouseClicked)
   {
-    handleClick(test_Button, mouseX, mouseY);
+    
     mouseClicked = FALSE;
   }
 }
@@ -95,7 +90,8 @@ void render()
 {
   SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
   SDL_RenderClear(rend);
-  Button_Render(test_Button, rend);
+  // Render stuff here
+
   SDL_RenderPresent(rend);
 }
 

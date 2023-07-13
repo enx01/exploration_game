@@ -1,4 +1,4 @@
-#include "../../headers/game_scenes/elements/button.h"
+#include "../../../headers/game_scenes/menu/elements/button.h"
 #include <SDL2/SDL_render.h>
 
 Button *create_Button(int x, int y, int w, int h, const char *label, void(*a)(), SDL_Renderer *rend)
@@ -15,7 +15,7 @@ Button *create_Button(int x, int y, int w, int h, const char *label, void(*a)(),
   res->isClicked = FALSE;
 
   // Creating the label
-  TTF_Font *font = TTF_OpenFont("res/fonts/typewriter.ttf", 24);
+  TTF_Font *font = TTF_OpenFont("res/fonts/typewriter.ttf", 64);
   
   if (font == NULL)
   {
@@ -23,7 +23,7 @@ Button *create_Button(int x, int y, int w, int h, const char *label, void(*a)(),
     return NULL;
   }
 
-  SDL_Surface *temp_surface = TTF_RenderText_Solid(font, label, (SDL_Color){0,0,0,255});
+  SDL_Surface *temp_surface = TTF_RenderText_Blended(font, label, (SDL_Color){0,0,0,255});
 
   res->texture = SDL_CreateTextureFromSurface(rend, temp_surface);
   SDL_FreeSurface(temp_surface);
@@ -69,4 +69,10 @@ void Button_Render(Button *button, SDL_Renderer *rend)
 
   // Button label
   SDL_RenderCopy(rend, button->texture, NULL, &button->label_rect);
+}
+
+void Button_Destroy(Button *button)
+{
+  SDL_DestroyTexture(button->texture);
+  free(button);
 }

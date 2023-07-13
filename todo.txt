@@ -2,5 +2,6 @@ Working Makfile : V
 Overall structure thinking + class learning and SDL2 implementation : V
 
 -- Jul 13 --
-Finish menu struct implementation with buttons / labels. : X
-Change structure -> create folder menu/ into game_scenes/ and move game_scenes/elements into menu/elements : X
+Finish menu struct implementation with buttons / labels. : X -> TODO : menu.c + background image implementation
+Working polymorphism for Game_Scenes : X ( not tested yet waiting for finished menu )
+Change structure -> create folder menu/ into game_scenes/ and move game_scenes/elements into menu/elements : V
