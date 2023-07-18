@@ -4,6 +4,6 @@
 extern int mouseX, mouseY, mouse_clicked;
 
 // Program info
-extern int running;
+extern int running, sound, scene;
 
 #endif // !GLOBALS_H

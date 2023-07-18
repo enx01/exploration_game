@@ -25,4 +25,9 @@ struct Menu;
 
 typedef struct Menu Menu;
 
+// Settings
+struct Settings;
+
+typedef struct Settings Settings;
+
 #endif // !HEADERS_H

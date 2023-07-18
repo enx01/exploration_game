@@ -1,5 +1,5 @@
 #ifndef LABEL_H
-#include "../../../structs.h"
+#include "../../structs.h"
 
 struct Label
 {

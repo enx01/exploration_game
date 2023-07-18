@@ -1,11 +1,13 @@
+#include "headers/constants.h"
+#include "headers/game_scenes/settings/settings.h"
+#include "headers/game_scenes/menu/menu.h"
 #include "headers/structs.h"
 #include "lib/include.h"
-#include "headers/game_scenes/menu/menu.h"
 
-int scene = MENU_SCENE;
 SDL_Window *window = NULL;
 SDL_Renderer *rend = NULL;
 Menu *main_menu = NULL;
+Settings *settings_menu = NULL;
 
 int initalize_window(void) 
 {
@@ -50,7 +52,9 @@ int initalize_window(void)
 
 void setup()
 {
+  scene = MENU_SCENE;
   main_menu = create_Menu(rend);
+  settings_menu = create_Settings(rend);
 }
 
 
@@ -74,6 +78,7 @@ void render()
 
 void destroy_window() 
 {
+  Menu_destroy(main_menu);
   SDL_DestroyRenderer(rend);
   SDL_DestroyWindow(window);
   SDL_Quit();
@@ -89,16 +94,21 @@ int main(void)
 
   while (running)
   {
-    //process_input();
-    //update();
-    //render();
 
     switch(scene)
     {
       case MENU_SCENE:
         Menu_run(main_menu, rend);
         break;
-      default:
+      case GAME_SCENE:
+        printf("Still not supported.\n");
+        scene = MENU_SCENE;
+        break;
+      case SETTINGS_SCENE:
+        Settings_run(settings_menu, rend);
+        break;
+      case 0:
+        running = FALSE;
         break;
     }
   }

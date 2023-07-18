@@ -20,3 +20,8 @@ void GS_render(Game_Scene *base)
 {
   base->render();
 }
+
+void GS_Destroy(Game_Scene *base)
+{
+  free(base);
+}

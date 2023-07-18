@@ -1,11 +1,13 @@
 #include "../../headers/game_scenes/menu/menu.h"
 #include "../../headers/game_scenes/game_scene.h"
-#include "../../headers/game_scenes/menu/elements/label.h"
-#include "../../headers/game_scenes/menu/elements/button.h"
+#include "../../headers/game_scenes/elements/label.h"
+#include "../../headers/game_scenes/elements/button.h"
 #include "../../headers/globals.h"
+#include "../../headers/constants.h"
+#include <SDL2/SDL_render.h>
 
 int mouseX,mouseY, mouse_clicked;
-int running;
+int running, scene;
 
 Menu *create_Menu(SDL_Renderer *rend)
 {
@@ -23,10 +25,10 @@ Menu *create_Menu(SDL_Renderer *rend)
 
   res->mainTitle = create_Label(0, 50, "Explore", rend);
   res->mainTitle->rect.x = (WINDOW_WIDTH/2) - (res->mainTitle->rect.w/2);
-  res->play = create_Button((WINDOW_WIDTH/2) - 100, 225, 200, 75, "play", play_button_action, rend);
+  res->play = create_Button((WINDOW_WIDTH/2) - 100, 225, 200, 75, "play", play_button_action, COLOR_GREEN,rend);
   printf("%d",WINDOW_WIDTH);
-  res->settings = create_Button((WINDOW_WIDTH/2) - 100, 350, 200, 75, "settings", settings_button_action, rend);
-  res->quit = create_Button(850, 520, 100, 50, "quit", quit_button_action, rend);
+  res->settings = create_Button((WINDOW_WIDTH/2) - 100, 350, 200, 75, "settings", settings_button_action, COLOR_GREEN, rend);
+  res->quit = create_Button(850, 520, 100, 50, "quit", quit_button_action, COLOR_RED, rend);
 
 
   res->button_count = 3;
@@ -44,7 +46,7 @@ Menu *create_Menu(SDL_Renderer *rend)
   return res;
 }
 
-void Menu_process_input(Menu *menu)
+int Menu_process_input(Menu *menu)
 {
   SDL_Event event;
   SDL_PollEvent(&event);
@@ -61,6 +63,10 @@ void Menu_process_input(Menu *menu)
     case SDL_MOUSEBUTTONDOWN: 
       SDL_GetMouseState(&mouseX, &mouseY);
       mouse_clicked = TRUE;
+      if (DEBUG)
+      {
+        printf("clicked at :\nx : %d\ny : %d\n",mouseX,mouseY); 
+      }
       int action = 0;
       if (mouse_clicked)
       {
@@ -73,11 +79,11 @@ void Menu_process_input(Menu *menu)
             {
               case BUTTON_PLAY_CLICKED:
                 printf("Switching to game...\n");
-                // TODO : Switch to game..
+                return BUTTON_PLAY_CLICKED;
                 break;
               case BUTTON_SETTINGS_CLICKED:
                 printf("Switching to settings...\n");
-                // TODO : Switch to settings..
+                return BUTTON_SETTINGS_CLICKED;
                 break;
               case BUTTON_QUIT_CLICKED:
                 printf("Quitting program...\n");
@@ -86,15 +92,11 @@ void Menu_process_input(Menu *menu)
             }
           }
         }
-        if (DEBUG)
-        {
-          printf("clicked at :\nx : %d\ny : %d\n",mouseX,mouseY); 
-        }
 
       mouse_clicked = FALSE;
       }
   }
-
+  return 0;
 }
 
 void Menu_update(Menu *menu)
@@ -118,9 +120,21 @@ void Menu_render(Menu *menu, SDL_Renderer *rend)
 
 void Menu_run(Menu *menu, SDL_Renderer *rend)
 {
-  Menu_process_input(menu);
+  int processed_input = Menu_process_input(menu);
   Menu_update(menu);
   Menu_render(menu,rend);
+  switch (processed_input) 
+  {
+    case BUTTON_SETTINGS_CLICKED:
+      scene = SETTINGS_SCENE;
+      break;
+    case BUTTON_PLAY_CLICKED:
+      scene = GAME_SCENE;
+      break;
+    case BUTTON_QUIT_CLICKED:
+      scene = 0;
+      break;
+  }
 }
 
 int play_button_action()
@@ -136,4 +150,17 @@ int settings_button_action()
 int quit_button_action()
 {
   return BUTTON_QUIT_CLICKED;
+}
+
+void Menu_destroy(Menu *menu)
+{
+  GS_Destroy(menu->base);
+  SDL_DestroyTexture(menu->texture);
+  Label_Destroy(menu->mainTitle);
+  for (int i = 0; i < menu->button_count; ++i)
+  {
+    Button_Destroy(menu->button_list[i]);
+  }
+  free(menu->button_list);
+  free(menu);
 }

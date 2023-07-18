@@ -17,5 +17,12 @@
 #define BUTTON_PLAY_CLICKED 100
 #define BUTTON_SETTINGS_CLICKED 101
 #define BUTTON_QUIT_CLICKED 102
+#define BUTTON_SOUND_CLICKED 103
+
+#define COLOR_RED ((int[]){255, 0, 20 ,255})
+#define COLOR_GREEN ((int[]){34, 139, 34, 255})
+#define COLOR_BLUE ((int[]){0, 113, 199, 255})
+#define COLOR_BLACK ((int[]){6, 6, 6, 255})
+#define COLOR_WHITE ((int[]){190, 190, 190, 255})
 
 #endif // !CONSTANTS_H

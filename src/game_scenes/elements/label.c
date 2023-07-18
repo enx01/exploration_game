@@ -1,4 +1,4 @@
-#include "../../../headers/game_scenes/menu/elements/label.h"
+#include "../../headers/game_scenes/elements/label.h"
 
 Label *create_Label(int x, int y, const char *text, SDL_Renderer *rend)
 {
@@ -30,11 +30,11 @@ Label *create_Label(int x, int y, const char *text, SDL_Renderer *rend)
 void Label_Render(Label * label, SDL_Renderer *rend)
 {
   SDL_RenderCopy(rend, label->texture, NULL, &(label->rect));
-  if (DEBUG)
-  {
-    SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
-    SDL_RenderDrawRect(rend, &(label->rect));
-  }
+  // if (DEBUG)
+  // {
+  //   SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+  //   SDL_RenderDrawRect(rend, &(label->rect));
+  // }
 }
 
 void Label_Destroy(Label *label)
