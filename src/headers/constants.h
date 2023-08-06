@@ -9,6 +9,7 @@
 #define WINDOW_HEIGHT 600
 
 // Scene flags
+#define TEST_SCENE 19
 #define MENU_SCENE 20
 #define GAME_SCENE 21
 #define SETTINGS_SCENE 22

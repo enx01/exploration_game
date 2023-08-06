@@ -1,7 +1,7 @@
 #include "../../headers/game_scenes/menu/menu.h"
-#include "../../headers/game_scenes/game_scene.h"
 #include "../../headers/game_scenes/elements/label.h"
 #include "../../headers/game_scenes/elements/button.h"
+#include "../../headers/game_scenes/game/game_elements/player.h"
 #include "../../headers/globals.h"
 #include "../../headers/constants.h"
 #include <SDL2/SDL_render.h>
@@ -12,8 +12,9 @@ int running, scene;
 Menu *create_Menu(SDL_Renderer *rend)
 {
   Menu *res = malloc(sizeof(Menu));
-  res->base = create_Game_Scene();
-  
+
+  res->p = create_Player(rend, 100, 100);
+    
   SDL_Surface *temp_surface = IMG_Load("res/img/menu_background.png");
   if (temp_surface == NULL)
   {
@@ -39,10 +40,6 @@ Menu *create_Menu(SDL_Renderer *rend)
   res->button_list[1] = res->settings;
   res->button_list[2] = res->quit;
 
-  res->base->process_input = (void(*)())Menu_process_input;
-  res->base->update = (void(*)())Menu_update;
-  res->base->render = (void(*)())Menu_render;
-
   return res;
 }
 
@@ -50,7 +47,6 @@ int Menu_process_input(Menu *menu)
 {
   SDL_Event event;
   SDL_PollEvent(&event);
-
   switch (event.type) 
   {
     case SDL_QUIT:
@@ -96,12 +92,16 @@ int Menu_process_input(Menu *menu)
       mouse_clicked = FALSE;
       }
   }
+
+  Player_process_input(menu->p, event);
+
+
   return 0;
 }
 
 void Menu_update(Menu *menu)
 {
-  
+  Player_update(menu->p); 
 }
 
 void Menu_render(Menu *menu, SDL_Renderer *rend)
@@ -114,6 +114,8 @@ void Menu_render(Menu *menu, SDL_Renderer *rend)
   Button_Render(menu->play, rend);
   Button_Render(menu->settings, rend);
   Button_Render(menu->quit, rend);
+
+  Player_render(menu->p, rend);
 
   SDL_RenderPresent(rend);
 }
@@ -154,7 +156,6 @@ int quit_button_action()
 
 void Menu_destroy(Menu *menu)
 {
-  GS_Destroy(menu->base);
   SDL_DestroyTexture(menu->texture);
   Label_Destroy(menu->mainTitle);
   for (int i = 0; i < menu->button_count; ++i)

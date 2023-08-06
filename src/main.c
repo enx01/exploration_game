@@ -1,4 +1,5 @@
 #include "headers/constants.h"
+#include "headers/game_scenes/game/game_elements/player.h"
 #include "headers/game_scenes/settings/settings.h"
 #include "headers/game_scenes/menu/menu.h"
 #include "headers/structs.h"
@@ -106,6 +107,8 @@ int main(void)
         break;
       case SETTINGS_SCENE:
         Settings_run(settings_menu, rend);
+        break;
+      case TEST_SCENE:
         break;
       case 0:
         running = FALSE;

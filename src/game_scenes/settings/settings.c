@@ -1,5 +1,4 @@
 #include "../../headers/game_scenes/settings/settings.h"
-#include "../../headers/game_scenes/game_scene.h"
 #include "../../headers/game_scenes/elements/label.h"
 #include "../../headers/game_scenes/elements/button.h"
 #include "../../headers/globals.h"
@@ -10,7 +9,6 @@ int sound;
 Settings *create_Settings(SDL_Renderer *rend)
 {
   Settings *res = malloc(sizeof(Settings));
-  res->base = create_Game_Scene();
   
   SDL_Surface *temp_surface = IMG_Load("res/img/settings_background.png");
   if (temp_surface == NULL)
@@ -36,10 +34,6 @@ Settings *create_Settings(SDL_Renderer *rend)
   res->button_list[0] = res->nill;
   res->button_list[1] = res->sound;
   res->button_list[2] = res->ret;
-
-  res->base->process_input = (void(*)())Settings_process_input;
-  res->base->update = (void(*)())Settings_update;
-  res->base->render = (void(*)())Settings_render;
 
   return res;
 }
@@ -142,4 +136,16 @@ int sound_button_action()
 int return_button_action()
 {
   return BUTTON_QUIT_CLICKED;
+}
+
+void Settings_destroy(Settings *settings)
+{
+  SDL_DestroyTexture(settings->texture);
+  Label_Destroy(settings->mainTitle);
+  for (int i = 0; i < settings->button_count; ++i)
+  {
+    Button_Destroy(settings->button_list[i]);
+  }
+  free(settings->button_list);
+  free(settings);
 }

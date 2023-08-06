@@ -3,7 +3,6 @@
 
 struct Settings
 {
-  Game_Scene *base;
   SDL_Rect rect;
   SDL_Texture *texture;
   Label *mainTitle;

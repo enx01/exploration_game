@@ -3,13 +3,14 @@
 
 struct Menu
 {
-  Game_Scene *base;
   SDL_Rect rect;
   SDL_Texture *texture;
   Label *mainTitle;
   Button *play, *settings, *quit;
   Button **button_list;
   int button_count;
+
+  Player *p;
 };
 
 Menu *create_Menu(SDL_Renderer *rend);
