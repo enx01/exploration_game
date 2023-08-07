@@ -11,7 +11,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_pixels.h>
-
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 

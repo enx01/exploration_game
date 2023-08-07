@@ -1,14 +1,19 @@
 #include "headers/constants.h"
+#include "headers/game_scenes/game/game.h"
 #include "headers/game_scenes/game/game_elements/player.h"
 #include "headers/game_scenes/settings/settings.h"
 #include "headers/game_scenes/menu/menu.h"
 #include "headers/structs.h"
 #include "lib/include.h"
+#include <SDL2/SDL_timer.h>
 
 SDL_Window *window = NULL;
 SDL_Renderer *rend = NULL;
 Menu *main_menu = NULL;
 Settings *settings_menu = NULL;
+Game *game = NULL;
+Uint32 deltaTime = 0.0;
+Uint32 lastFrameTime = 0.0;
 
 int initalize_window(void) 
 {
@@ -56,6 +61,8 @@ void setup()
   scene = MENU_SCENE;
   main_menu = create_Menu(rend);
   settings_menu = create_Settings(rend);
+  game = create_Game(rend);
+  lastFrameTime = SDL_GetTicks();
 }
 
 
@@ -80,6 +87,8 @@ void render()
 void destroy_window() 
 {
   Menu_destroy(main_menu);
+  Settings_destroy(settings_menu);
+  Game_destroy(game);
   SDL_DestroyRenderer(rend);
   SDL_DestroyWindow(window);
   SDL_Quit();
@@ -95,6 +104,9 @@ int main(void)
 
   while (running)
   {
+    Uint32 currentTime = SDL_GetTicks();
+    deltaTime = currentTime - lastFrameTime;
+    lastFrameTime = currentTime;
 
     switch(scene)
     {
@@ -102,8 +114,7 @@ int main(void)
         Menu_run(main_menu, rend);
         break;
       case GAME_SCENE:
-        printf("Still not supported.\n");
-        scene = MENU_SCENE;
+        Game_run(game, rend, deltaTime);
         break;
       case SETTINGS_SCENE:
         Settings_run(settings_menu, rend);

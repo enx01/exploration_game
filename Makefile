@@ -1,6 +1,6 @@
 CC = clang
 CFLAGS = -Wall
-LDFLAGS = -lSDL2 -lSDL2_ttf -lSDL2_image
+LDFLAGS = -lSDL2 -lSDL2_ttf -lSDL2_image -lm
 SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = bin

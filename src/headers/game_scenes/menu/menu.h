@@ -9,8 +9,6 @@ struct Menu
   Button *play, *settings, *quit;
   Button **button_list;
   int button_count;
-
-  Player *p;
 };
 
 Menu *create_Menu(SDL_Renderer *rend);

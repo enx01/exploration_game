@@ -19,5 +19,6 @@ void Settings_run(Settings *settings, SDL_Renderer *rend);
 int void_button_action();
 int sound_button_action();
 int return_button_action();
+void Settings_destroy(Settings *settings);
 
 #endif // !SETTINGS_H

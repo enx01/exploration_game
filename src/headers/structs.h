@@ -37,6 +37,11 @@
 
       typedef struct Player Player;
 
+      // Crosshair
+      struct Crosshair;
+
+      typedef struct Crosshair Crosshair;
+
       //Health Bar
       struct Health_Bar;
 

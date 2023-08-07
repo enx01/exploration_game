@@ -1,6 +1,7 @@
 #include "../../headers/game_scenes/elements/button.h"
+#include <SDL2/SDL_pixels.h>
 
-Button *create_Button(int x, int y, int w, int h, const char *label, int(*action)(), int c[4], SDL_Renderer *rend)
+Button *create_Button(int x, int y, int w, int h, const char *label, int(*a)(), int c[4], SDL_Renderer *rend)
 {
   Button *res = malloc(sizeof(Button));
   res->rect.x = x;
@@ -13,13 +14,7 @@ Button *create_Button(int x, int y, int w, int h, const char *label, int(*action
 
   res->isClicked = FALSE;
 
-  int r,g,b,a;
-  r = c[0];
-  g = c[1];
-  b = c[2];
-  a = c[3];
-
-  SDL_Color temp = {r,g,b,a};
+  SDL_Color temp = {c[0],c[1],c[2],c[3]};
   res->color = temp; 
 
   // Creating the label
@@ -36,7 +31,7 @@ Button *create_Button(int x, int y, int w, int h, const char *label, int(*action
   res->texture = SDL_CreateTextureFromSurface(rend, temp_surface);
   SDL_FreeSurface(temp_surface);
 
-  res->action = action;
+  res->action = a;
 
   return res;
 }
@@ -73,7 +68,7 @@ int handleClick(Button *button, int x, int y)
 void Button_Render(Button *button, SDL_Renderer *rend)
 {
   // Button background
-  SDL_SetRenderDrawColor(rend,button->color.r, button->color.g, button->color.b, button->color.a);
+  SDL_SetRenderDrawColor(rend,button->color.r,button->color.g,button->color.b, button->color.a);
   SDL_RenderFillRect(rend, &button->rect);
 
   // Button label

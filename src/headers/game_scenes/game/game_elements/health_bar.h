@@ -4,8 +4,9 @@
 struct Health_Bar
 {
   SDL_Rect rect;
-  SDL_Texture *texture;
   Player *player;
+
+  int width, height;
 };
 
 Health_Bar *create_Health_Bar(SDL_Renderer *rend, Player *player);

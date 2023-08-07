@@ -12,8 +12,6 @@ int running, scene;
 Menu *create_Menu(SDL_Renderer *rend)
 {
   Menu *res = malloc(sizeof(Menu));
-
-  res->p = create_Player(rend, 100, 100);
     
   SDL_Surface *temp_surface = IMG_Load("res/img/menu_background.png");
   if (temp_surface == NULL)
@@ -93,15 +91,11 @@ int Menu_process_input(Menu *menu)
       }
   }
 
-  Player_process_input(menu->p, event);
-
-
   return 0;
 }
 
 void Menu_update(Menu *menu)
 {
-  Player_update(menu->p); 
 }
 
 void Menu_render(Menu *menu, SDL_Renderer *rend)
@@ -114,8 +108,6 @@ void Menu_render(Menu *menu, SDL_Renderer *rend)
   Button_Render(menu->play, rend);
   Button_Render(menu->settings, rend);
   Button_Render(menu->quit, rend);
-
-  Player_render(menu->p, rend);
 
   SDL_RenderPresent(rend);
 }

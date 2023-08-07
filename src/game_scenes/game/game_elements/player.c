@@ -1,9 +1,12 @@
 #include "../../../headers/game_scenes/game/game_elements/player.h"
 #include "../../../headers/game_scenes/game/game_elements/health_bar.h"
 #include "../../../headers/game_scenes/game/game_elements/inventory.h"
+#include "../../../headers/game_scenes/game/game_elements/crosshair.h"
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_stdinc.h>
+#include <stdio.h>
 
 Player *create_Player(SDL_Renderer *rend, int x, int y)
 {
@@ -28,18 +31,18 @@ Player *create_Player(SDL_Renderer *rend, int x, int y)
 
   res->x = x;
   res->y = y;
-  res->dx = x;
-  res->dy = y;
-  res->hp = 100;
-  res->speed = 1;
+  res->hp = 28;
+  res->speed = 100;
 
 
 
   Health_Bar *hb = create_Health_Bar(rend, res);
   Inventory *inv = create_Inventory(rend);
+  Crosshair *cross = create_Crosshair(rend, res);
 
   res->health_bar = hb;
   res->inventory = inv;
+  res->crosshair = cross;
 
   res->up = FALSE;
   res->down = FALSE;
@@ -58,80 +61,83 @@ void Player_process_input(Player *player, SDL_Event event)
     case SDL_KEYDOWN:
       switch (event.key.keysym.sym) {
         case SDLK_z:
-          player->dx += player->speed;
+          player->up = TRUE;
           break;
-      //   case SDLK_s:
-      //     player->down = TRUE;
-      //     break;
-      //   case SDLK_d:
-      //     player->right = TRUE;
-      //     break;
-      //   case SDLK_q:
-      //     player->left = TRUE;
-      //     break;
-      //   case SDLK_LSHIFT:
-      //     player->sprint = TRUE;
-      //     break;
+        case SDLK_s:
+          player->down = TRUE;
+          break;
+        case SDLK_d:
+          player->right = TRUE;
+          break;
+        case SDLK_q:
+          player->left = TRUE;
+          break;
+        case SDLK_LSHIFT:
+          player->sprint = TRUE;
+          break;
     }
       break;
     case SDL_KEYUP:
       switch (event.key.keysym.sym) {
         case SDLK_z:
-          
+          player->up = FALSE;
           break;
-        // case SDLK_s:
-        //   player->down = FALSE;
-        //   break;
-        // case SDLK_d:
-        //   player->right = FALSE;
-        //   break;
-        // case SDLK_q:
-        //   player->left = FALSE;
-        //   break;
-        // case SDLK_LSHIFT:
-        //   player->sprint = FALSE;
-        //   break;
+        case SDLK_s:
+          player->down = FALSE;
+          break;
+        case SDLK_d:
+          player->right = FALSE;
+          break;
+        case SDLK_q:
+          player->left = FALSE;
+          break;
+        case SDLK_LSHIFT:
+          player->sprint = FALSE;
+  break;
       }
       break;
   }
+  Crosshair_process_input(player->crosshair, event);
 }
 
-void Player_update(Player *player)
+void Player_update(Player *player, Uint32 deltaTime)
 {
-  // if (player->up)
-  // {
-  //   player->y -= player->speed;
-  // }
-  // if (player->down)
-  // {
-  //   player->y += player->speed;
-  // }
-  // if (player->right)
-  // {
-  //   player->x += player->speed;
-  // }
-  // if (player->left)
-  // {
-  //   player->x -= player->speed;
-  // }
-
-  player->x = player->dx;
+  if (player->up && player->y > 0)
+  {
+     player->y -= player->speed * (deltaTime / 1000.0);
+  }
+  if (player->down && (player->y+player->rect.h) < WINDOW_HEIGHT)
+  {
+    player->y += player->speed * (deltaTime / 1000.0);
+  }
+  if (player->right && (player->x+player->rect.w) < WINDOW_WIDTH)
+  {
+    player->x += player->speed * (deltaTime / 1000.0);
+  }
+  if (player->left && player->x > 0)
+  {
+    player->x -= player->speed * (deltaTime / 1000.0);
+  }
 
   player->rect.x = player->x;
   player->rect.y = player->y;
+
+  Crosshair_update(player->crosshair);
 }
 
 void Player_render(Player *player, SDL_Renderer *rend)
 {
   SDL_RenderCopy(rend, player->texture, NULL, &(player->rect));
-  //Health_Bar_render(player->health_bar, rend);
+  Crosshair_render(player->crosshair, rend);
+  Health_Bar_render(player->health_bar, rend);
   //Inventory_render(player->inventory, rend);
+  
 }
 
-void Player_run(Player *player, SDL_Renderer *rend, SDL_Event event)
+void Player_run(Player *player, SDL_Renderer *rend, SDL_Event event, Uint32 deltaTime)
 {
   Player_process_input(player, event);
-  Player_update(player);
+  Player_update(player, deltaTime);
   Player_render(player,rend);
 }
 
