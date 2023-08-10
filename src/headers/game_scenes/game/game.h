@@ -6,7 +6,10 @@ struct Game
   SDL_Rect rect;
   SDL_Texture *texture;
 
-  Item *item;
+  Inv_Item_Slot *item_slot;
+
+  Item **items_in_game;
+  int nb_items;
   Player *player; 
 };
 

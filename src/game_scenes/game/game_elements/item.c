@@ -1,5 +1,8 @@
 #include "../../../headers/game_scenes/game/game_elements/item.h"
+#include "../../../headers/game_scenes/game/game_elements/crosshair.h"
+#include "../../../headers/game_scenes/game/game_elements/player.h"
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_render.h>
 #include <stdlib.h>
 
 Item *create_Item(SDL_Renderer *rend, int flag, int x, int y)
@@ -10,33 +13,21 @@ Item *create_Item(SDL_Renderer *rend, int flag, int x, int y)
   }
 
   Item *res = malloc(sizeof(Item));
+  char *path;
 
-  char path[] = "res/img/items/";
-  char *name;
-  char *temp;
-
-  int nameSize;
-
-  switch (flag) 
+  switch (flag)
   {
     case APPLE :
-      nameSize = 9;
-      name = malloc(nameSize+1);
-      temp = "apple.png";
-      res->weight = 2;
+      path = "res/img/items/apple.png";
       break;
     case SWORD :
-      nameSize = 9;
-      name = malloc(nameSize+1);
-      temp = "sword.png";
-      res->weight = 10;
+      path = "res/img/items/sword.png";
+      break;
+    default :
       break;
   }
 
-  strcpy(name,temp);
-
-  strcat(path,name);
-
+  
   SDL_Surface *temp_surface = IMG_Load(path);
 
   if (temp_surface == NULL)
@@ -44,12 +35,15 @@ Item *create_Item(SDL_Renderer *rend, int flag, int x, int y)
     fprintf(stderr, "Error : Couldn't load image. %s", IMG_GetError());
     return NULL;
   }
-  res->texture = SDL_CreateTextureFromSurface(rend, temp_surface);
+
+  res->texture = SDL_CreateTextureFromSurface(rend, temp_surface); 
 
   res->x = x;
   res->y = y;
 
   res->is_on_ground = TRUE;
+
+  res->highlighted = FALSE;
 
   res->rect.x = x;
   res->rect.y = y;
@@ -59,4 +53,42 @@ Item *create_Item(SDL_Renderer *rend, int flag, int x, int y)
   SDL_FreeSurface(temp_surface);
 
   return res;
+}
+
+void Item_update(Item *item, Player* player)
+{
+  if (Item_IsCrosshairOnItem(item, player->crosshair))
+  {
+    item->highlighted = TRUE;
+  }
+  else 
+  {
+    item->highlighted = FALSE;
+  }
+}
+
+void Item_render(Item *item, SDL_Renderer *rend)
+{
+  SDL_RenderCopy(rend, item->texture, NULL, &(item->rect));
+  if (item->highlighted)
+  {
+    SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
+    SDL_RenderDrawRect(rend, &(item->rect));
+  } 
+}
+
+int Item_IsCrosshairOnItem(Item *item, Crosshair *cross)
+{
+  SDL_Point crosshair_coords =  Crosshair_GetCoordinates(cross);
+  if (crosshair_coords.x >= (item->x-10) && 
+      crosshair_coords.x < (item->x + item->rect.w + 10) && 
+      crosshair_coords.y >= (item->y-10) &&
+      crosshair_coords.y < (item->y + item->rect.h + 10))
+  {
+    return TRUE;
+  }
+  else 
+  {
+    return FALSE;
+  }
 }

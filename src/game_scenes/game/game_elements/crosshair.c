@@ -79,6 +79,14 @@ SDL_Point Crosshair_process_input(Crosshair *crosshair, SDL_Event event)
   return res;
 }
 
+SDL_Point Crosshair_GetCoordinates(Crosshair *crosshair)
+{
+  SDL_Point res = { 0,0 };
+  res.x = crosshair->x + (int)(crosshair->rect.w/2);
+  res.y = crosshair->y + (int)(crosshair->rect.h/2);
+  return res;
+}
+
 void Crosshair_update(Crosshair *crosshair)
 {   
   if (crosshair->rotation_dir != 0)

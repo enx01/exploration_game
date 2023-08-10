@@ -1,6 +1,7 @@
 #include "../../headers/game_scenes/game/game.h"
 #include "../../headers/game_scenes/game/game_elements/player.h"
 #include "../../headers/game_scenes/game/game_elements/item.h"
+#include "../../headers/game_scenes/game/game_elements/inv_item_slot.h"
 #include "../../headers/globals.h"
 #include "../../headers/constants.h"
 #include <SDL2/SDL_render.h>
@@ -20,7 +21,13 @@ Game *create_Game(SDL_Renderer *rend)
 
   res->player = create_Player(rend, 300,300);
 
-  res->item = create_Item(rend, APPLE);
+  res->items_in_game = malloc(20* sizeof(Item));
+
+  res->items_in_game[0] = create_Item(rend, APPLE, 400, 300);
+
+  res->item_slot = create_Inv_Item_Slot(rend, 1);
+
+  res->nb_items = 1;
 
   return res;
 }
@@ -63,6 +70,10 @@ int Game_process_input(Game *game)
 void Game_update(Game *game, Uint32 deltaTime)
 {
   Player_update(game->player, deltaTime);
+  for (int i = 0; i < game->nb_items; ++i)
+  {
+    Item_update(game->items_in_game[i],game->player); 
+  }
 }
 
 void Game_render(Game *game, SDL_Renderer *rend)
@@ -71,8 +82,15 @@ void Game_render(Game *game, SDL_Renderer *rend)
   SDL_RenderClear(rend);
 
   SDL_RenderCopy(rend, game->texture, NULL, NULL);
+  
+  for (int i = 0; i < game->nb_items; ++i)
+  {
+    Item_render(game->items_in_game[i],rend); 
+  }
 
   Player_render(game->player, rend);
+
+  Inv_Item_Slot_render(game->item_slot, rend);
 
   SDL_RenderPresent(rend);
 }

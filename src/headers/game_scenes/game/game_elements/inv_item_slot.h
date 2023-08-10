@@ -3,8 +3,7 @@
 
 struct Inv_Item_Slot
 {
-  SDL_Rect rect;
-  SDL_Texture *texture;
+  SDL_Rect rect, interior_rect;
   Item *content;
   int slot_nb;
 };
