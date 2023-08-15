@@ -27,8 +27,8 @@
 #define COLOR_BLACK ((int[]){6, 6, 6, 255})
 #define COLOR_WHITE ((int[]){190, 190, 190, 255})
 #define COLOR_DARK_GREY ((int[]){99,102,106,255})
-#define COLOR_CEMENT_GRAY ((int[]){133,138,126,255})
-#define COLOR_ASH_GRAY ((int[]){178,190,181,255})
+#define COLOR_CEMENT_GREY ((int[]){133,138,126,255})
+#define COLOR_ASH_GREY ((int[]){178,190,181,255})
 
 // Item flags
 #define APPLE 1000

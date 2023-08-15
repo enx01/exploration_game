@@ -4,9 +4,10 @@
 struct Inventory
 {
   SDL_Rect rect;
-  SDL_Texture *texture;
 
-  Inv_Item_Slot *content;
+  Inv_Item_Slot **content;
+  int content_nb;
+  
   int item_count;
 
   int is_open;

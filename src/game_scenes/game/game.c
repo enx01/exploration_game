@@ -25,8 +25,6 @@ Game *create_Game(SDL_Renderer *rend)
 
   res->items_in_game[0] = create_Item(rend, APPLE, 400, 300);
 
-  res->item_slot = create_Inv_Item_Slot(rend, 1);
-
   res->nb_items = 1;
 
   return res;
@@ -89,8 +87,6 @@ void Game_render(Game *game, SDL_Renderer *rend)
   }
 
   Player_render(game->player, rend);
-
-  Inv_Item_Slot_render(game->item_slot, rend);
 
   SDL_RenderPresent(rend);
 }

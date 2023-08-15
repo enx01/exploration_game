@@ -130,7 +130,7 @@ void Player_render(Player *player, SDL_Renderer *rend)
   SDL_RenderCopy(rend, player->texture, NULL, &(player->rect));
   Crosshair_render(player->crosshair, rend);
   Health_Bar_render(player->health_bar, rend);
-  //Inventory_render(player->inventory, rend);
+  Inventory_render(player->inventory, rend);
   
 }
 
