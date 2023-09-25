@@ -75,6 +75,15 @@ void Player_process_input(Player *player, SDL_Event event)
         case SDLK_LSHIFT:
           player->sprint = TRUE;
           break;
+        case SDLK_i:
+          if (player->inventory->is_open)
+          {
+            player->inventory->is_open = 0;
+          }
+          else 
+          {
+            player->inventory->is_open = 1;
+          }
     }
       break;
     case SDL_KEYUP:
