@@ -60,7 +60,12 @@ int Game_process_input(Game *game)
       }
   }
 
-  Player_process_input(game->player, event);
+  SDL_Point player_input = Player_process_input(game->player, event);
+  if (player_input.x != 0 && player_input.y != 0)
+  {
+    fprintf(stderr, "game struct processed : player interacted at x : %d y : %d.\n",player_input.x,player_input.y);
+    // TODO : Calculation if player input is in bounds of an item
+  }
 
   return 0;
 }

@@ -53,23 +53,25 @@ Player *create_Player(SDL_Renderer *rend, int x, int y)
   return res;
 }
 
-void Player_process_input(Player *player, SDL_Event event)
+SDL_Point Player_process_input(Player *player, SDL_Event event)
 {
 
   switch (event.type) 
   {
     case SDL_KEYDOWN:
       switch (event.key.keysym.sym) {
-        case SDLK_z:
+        case SDLK_w :
+        case SDLK_z :
           player->up = TRUE;
           break;
-        case SDLK_s:
+        case SDLK_s :
           player->down = TRUE;
           break;
         case SDLK_d:
           player->right = TRUE;
           break;
-        case SDLK_q:
+        case SDLK_a:
+        case SDLK_q :
           player->left = TRUE;
           break;
         case SDLK_LSHIFT:
@@ -88,6 +90,7 @@ void Player_process_input(Player *player, SDL_Event event)
       break;
     case SDL_KEYUP:
       switch (event.key.keysym.sym) {
+        case SDLK_w:
         case SDLK_z:
           player->up = FALSE;
           break;
@@ -97,6 +100,7 @@ void Player_process_input(Player *player, SDL_Event event)
         case SDLK_d:
           player->right = FALSE;
           break;
+        case SDLK_a:
         case SDLK_q:
           player->left = FALSE;
           break;
@@ -106,7 +110,7 @@ void Player_process_input(Player *player, SDL_Event event)
       }
       break;
   }
-  Crosshair_process_input(player->crosshair, event);
+  return Crosshair_process_input(player->crosshair, event);
 }
 
 void Player_update(Player *player, Uint32 deltaTime)
