@@ -16,9 +16,6 @@ Inv_Item_Slot *create_Inv_Item_Slot(SDL_Renderer *rend, int x, int y)
   res->interior_rect.w = 35;
   res->interior_rect.h = 35;
 
-  
-
-
   return res;
 }
 

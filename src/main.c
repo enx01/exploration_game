@@ -65,25 +65,6 @@ void setup()
   lastFrameTime = SDL_GetTicks();
 }
 
-
-// While loop functions
-
-void process_input()
-{
-
-}
-
-void update()
-{
-
-}
-
-void render()
-{
-    // Render stuff here
-  
-}
-
 void destroy_window() 
 {
   Menu_destroy(main_menu);

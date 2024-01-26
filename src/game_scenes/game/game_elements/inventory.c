@@ -5,7 +5,7 @@ Inventory *create_Inventory(SDL_Renderer *rend)
 {
   Inventory *res = malloc(sizeof(Inventory));
 
-  res->is_open = TRUE;
+  res->is_open = FALSE;
   res->content_nb = 10;
   res->content = malloc(res->content_nb * sizeof(Inv_Item_Slot));
 

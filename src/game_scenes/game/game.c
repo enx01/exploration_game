@@ -88,6 +88,7 @@ void Game_render(Game *game, SDL_Renderer *rend)
 
   Player_render(game->player, rend);
 
+
   SDL_RenderPresent(rend);
 }
 
@@ -95,11 +96,7 @@ void Game_run(Game *game, SDL_Renderer *rend, Uint32 deltaTime)
 {
   int processed_input = Game_process_input(game);
   Game_update(game,deltaTime);
-  Game_render(game,rend);
-  switch (processed_input) 
-  {
-    // TODO : Handle buttons inputs
-  }
+  Game_render(game,rend);  
 }
 
 void Game_destroy(Game *game)
