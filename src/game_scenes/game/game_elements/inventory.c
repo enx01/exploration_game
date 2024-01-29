@@ -1,5 +1,6 @@
 #include "../../../headers/game_scenes/game/game_elements/inventory.h"
 #include "../../../headers/game_scenes/game/game_elements/inv_item_slot.h"
+#include "../../../headers/game_scenes/game/game_elements/item.h"
 
 Inventory *create_Inventory(SDL_Renderer *rend)
 {
@@ -37,6 +38,25 @@ Inventory *create_Inventory(SDL_Renderer *rend)
   return res;
 }
 
+void Inventory_add_item(Inventory *inventory, Item *item)
+{
+  Inv_Item_Slot_change_content(inventory->content[inventory->item_count],item);
+  ++inventory->item_count;
+}
+
+void Inventory_remove_item(Inventory *inventory, Item *item)
+{
+  int i = 0;
+  while (inventory->content[i]->content != item)
+  {
+    ++i;
+  }
+  for (int j = i; j < inventory->content_nb-1; ++j)
+  {
+    Inv_Item_Slot_change_content(inventory->content[j],inventory->content[j+1]->content);
+  }
+}
+
 void Inventory_render(Inventory *inventory, SDL_Renderer *rend)
 {
   if (inventory->is_open)
@@ -45,7 +65,7 @@ void Inventory_render(Inventory *inventory, SDL_Renderer *rend)
     SDL_RenderFillRect(rend, &(inventory->rect));
 
     for (int i = 0; i < inventory->content_nb; ++i)
-    {
+    { 
       Inv_Item_Slot_render(inventory->content[i], rend);
     }
   }

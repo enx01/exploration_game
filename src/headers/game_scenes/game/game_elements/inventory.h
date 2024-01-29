@@ -1,13 +1,12 @@
 #ifndef INVENTORY_H
 #include "../../../structs.h"
 
-struct Inventory
-{
+struct Inventory {
   SDL_Rect rect;
 
   Inv_Item_Slot **content;
   int content_nb;
-  
+
   int item_count;
 
   int is_open;

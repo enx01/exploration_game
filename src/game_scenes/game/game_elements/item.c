@@ -41,7 +41,7 @@ Item *create_Item(SDL_Renderer *rend, int flag, int x, int y)
   res->x = x;
   res->y = y;
 
-  res->is_on_ground = TRUE;
+  res->showing = TRUE;
 
   res->highlighted = FALSE;
 
@@ -57,33 +57,41 @@ Item *create_Item(SDL_Renderer *rend, int flag, int x, int y)
 
 void Item_update(Item *item, Player* player)
 {
-  if (Item_IsCrosshairOnItem(item, player->crosshair))
+  if (player != NULL)
   {
-    item->highlighted = TRUE;
+    SDL_Point crosshair_pos = {player->crosshair->x, player->crosshair->y};
+    if (Item_IsPointOnItem(item, crosshair_pos))
+    {
+      item->highlighted = TRUE;
+    }
+    else 
+    {
+      item->highlighted = FALSE;
+    }
   }
-  else 
-  {
-    item->highlighted = FALSE;
-  }
+  item->rect.x = item->x;
+  item->rect.y = item->y;
 }
 
 void Item_render(Item *item, SDL_Renderer *rend)
 {
-  SDL_RenderCopy(rend, item->texture, NULL, &(item->rect));
-  if (item->highlighted)
+  if (item->showing)
   {
-    SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
-    SDL_RenderDrawRect(rend, &(item->rect));
-  } 
+    SDL_RenderCopy(rend, item->texture, NULL, &(item->rect));
+    if (item->highlighted)
+    {
+      SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
+      SDL_RenderDrawRect(rend, &(item->rect));
+    }
+  }
 }
 
-int Item_IsCrosshairOnItem(Item *item, Crosshair *cross)
+int Item_IsPointOnItem(Item *item, SDL_Point point)
 {
-  SDL_Point crosshair_coords =  Crosshair_GetCoordinates(cross);
-  if (crosshair_coords.x >= (item->x-10) && 
-      crosshair_coords.x < (item->x + item->rect.w + 10) && 
-      crosshair_coords.y >= (item->y-10) &&
-      crosshair_coords.y < (item->y + item->rect.h + 10))
+  if (point.x >= (item->x-10) && 
+      point.x < (item->x + item->rect.w + 10) && 
+      point.y >= (item->y-10) &&
+      point.y < (item->y + item->rect.h + 10))
   {
     return TRUE;
   }

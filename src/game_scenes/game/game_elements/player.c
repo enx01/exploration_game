@@ -2,6 +2,7 @@
 #include "../../../headers/game_scenes/game/game_elements/health_bar.h"
 #include "../../../headers/game_scenes/game/game_elements/inventory.h"
 #include "../../../headers/game_scenes/game/game_elements/crosshair.h"
+#include "../../../headers/game_scenes/game/game_elements/item.h"
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_render.h>
@@ -43,6 +44,8 @@ Player *create_Player(SDL_Renderer *rend, int x, int y)
   res->health_bar = hb;
   res->inventory = inv;
   res->crosshair = cross;
+
+  res->equipped_item = NULL;
 
   res->up = FALSE;
   res->down = FALSE;
@@ -135,7 +138,17 @@ void Player_update(Player *player, Uint32 deltaTime)
   player->rect.x = player->x;
   player->rect.y = player->y;
 
-  Crosshair_update(player->crosshair);
+  if (player->equipped_item != NULL)
+  {
+    player->equipped_item->x = player->x;
+    player->equipped_item->y = player->y;
+  }
+   Crosshair_update(player->crosshair);
+}
+
+void Player_add_item(Player *player, Item *item)
+{
+  Inventory_add_item(player->inventory, item);
 }
 
 void Player_render(Player *player, SDL_Renderer *rend)

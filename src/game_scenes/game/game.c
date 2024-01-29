@@ -2,6 +2,7 @@
 #include "../../headers/game_scenes/game/game_elements/player.h"
 #include "../../headers/game_scenes/game/game_elements/item.h"
 #include "../../headers/game_scenes/game/game_elements/inv_item_slot.h"
+#include "../../headers/game_scenes/game/game_elements/inventory.h"
 #include "../../headers/globals.h"
 #include "../../headers/constants.h"
 #include <SDL2/SDL_render.h>
@@ -23,9 +24,10 @@ Game *create_Game(SDL_Renderer *rend)
 
   res->items_in_game = malloc(20* sizeof(Item));
 
-  res->items_in_game[0] = create_Item(rend, APPLE, 400, 300);
+  res->nb_items = 0;
 
-  res->nb_items = 1;
+  Game_add_item(res, create_Item(rend, APPLE, 400, 300));
+  Game_add_item(res, create_Item(rend, SWORD, 500, 300));
 
   return res;
 }
@@ -50,14 +52,30 @@ int Game_process_input(Game *game)
       {
         printf("clicked at :\nx : %d\ny : %d\n",mouseX,mouseY); 
       }
-      int action = 0;
-      if (mouse_clicked)
+      if (game->player->inventory->is_open) 
       {
+        SDL_Point mouse_pos = {mouseX, mouseY};
+        for (int i = 0; i < game->player->inventory->item_count; ++i) 
+        {
+          if (Item_IsPointOnItem(game->player->inventory->content[i]->content, mouse_pos))
+          {
+            if (DEBUG)
+            {
+              printf("clicked on item %d\n", i);
+            }
+            Inventory_remove_item(game->player->inventory, game->player->inventory->content[i]->content);
+            game->player->equipped_item = game->player->inventory->content[i]->content;
+            break;
+          }
+        }
+      }
+      //if (mouse_clicked)
+      //{
 
       // TODO : Game environment interaction 
 
-      mouse_clicked = FALSE;
-      }
+     // mouse_clicked = FALSE;
+    //  }
   }
 
   SDL_Point player_input = Player_process_input(game->player, event);
@@ -65,9 +83,49 @@ int Game_process_input(Game *game)
   {
     fprintf(stderr, "game struct processed : player interacted at x : %d y : %d.\n",player_input.x,player_input.y);
     // TODO : Calculation if player input is in bounds of an item
+    for (int i = 0; i < game->nb_items; i++)
+      {
+        if (Item_IsPointOnItem(game->items_in_game[i], player_input))
+        {
+        fprintf(stderr, "game struct processed : player interacted with item %d at x : %d y : %d.\n",game->items_in_game[i]->id ,player_input.x,player_input.y);
+        Game_give_item_to_player(game, i);
+        break;
+        }
+      }
+        
   }
 
   return 0;
+}
+
+void Game_give_item_to_player(Game *game, int i)
+{
+  Player_add_item(game->player, game->items_in_game[i]);
+  Game_remove_item(game, i);
+}
+
+void Game_add_item(Game *game, Item *item)
+{
+  game->items_in_game[game->nb_items] = item;
+  ++game->nb_items;
+}
+
+void Game_remove_item(Game *game, int id)
+{
+  game->items_in_game[id]->showing = FALSE;
+
+  if (id == game->nb_items-1)
+  {
+    game->items_in_game[id] = NULL;
+  }
+  else 
+  {
+    for (int i = id; i < game->nb_items-1; ++i)
+    {
+      game->items_in_game[i] = game->items_in_game[i+1];
+    }
+  }
+  --game->nb_items;
 }
 
 void Game_update(Game *game, Uint32 deltaTime)

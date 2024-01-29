@@ -12,6 +12,8 @@ struct Player {
   Inventory *inventory;
   Crosshair *crosshair;
 
+  Item *equipped_item;
+
   int up, down, left, right, sprint;
 };
 
@@ -27,6 +29,8 @@ void Player_move_up(Player *player);
 void Player_move_down(Player *player);
 void Player_move_left(Player *player);
 void Player_move_right(Player *player);
+
+void Player_add_item(Player *player, Item *item);
 
 void Player_destroy(Player *player);
 

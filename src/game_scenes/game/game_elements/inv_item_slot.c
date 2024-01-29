@@ -5,6 +5,8 @@
 Inv_Item_Slot *create_Inv_Item_Slot(SDL_Renderer *rend, int x, int y)
 {
   Inv_Item_Slot *res = malloc(sizeof(Inv_Item_Slot));
+
+  res->content = NULL;
  
   res->rect.x = x;
   res->rect.y = y;
@@ -19,10 +21,29 @@ Inv_Item_Slot *create_Inv_Item_Slot(SDL_Renderer *rend, int x, int y)
   return res;
 }
 
+void Inv_Item_Slot_change_content(Inv_Item_Slot *iis, Item *item)
+{
+  iis->content = item;
+  if (item != NULL)
+  {
+    item->x = iis->rect.x+5;
+    item->y = iis->rect.y+5;
+  }
+
+  Item_update(item, NULL);
+
+}
+
 void Inv_Item_Slot_render(Inv_Item_Slot *iis, SDL_Renderer *rend)
 {
   SDL_SetRenderDrawColor(rend, COLOR_DARK_GREY[0], COLOR_DARK_GREY[1], COLOR_DARK_GREY[2], COLOR_DARK_GREY[3]);
   SDL_RenderFillRect(rend, &(iis->rect));
   SDL_SetRenderDrawColor(rend, COLOR_CEMENT_GREY[0], COLOR_CEMENT_GREY[1], COLOR_CEMENT_GREY[2], COLOR_CEMENT_GREY[3]);
   SDL_RenderFillRect(rend, &(iis->interior_rect));
+  if (iis->content != NULL)
+  {
+    iis->content->highlighted = FALSE;
+    iis->content->showing = TRUE;
+    Item_render(iis->content, rend);
+  }
 }
